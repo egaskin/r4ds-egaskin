@@ -737,56 +737,56 @@ algorithm used to calculate new values for graph is called `stat` (statistical t
 
     -   answer: <https://ggplot2.tidyverse.org/reference/index.html>, generally they have in common the operation they do (geom_X and stat_X, X is the common portion). note: this table is based on the entire geoms section rather than just finding geoms that have a paired stat, so there is more info here. there is also missing info for stats that don't have a geom
 
-        | geom                                           | stat                   | description                                                                                                                                                                                    |
-        |---------------|---------------|------------------------------------------|
-        | geom_abline                                    | NA                     | add reference line for annotating plots                                                                                                                                                        |
-        | geom_hline                                     | NA                     | add reference line for annotating plots                                                                                                                                                        |
-        | geom_vline                                     | NA                     | add reference line for annotating plots                                                                                                                                                        |
-        | geom_bar                                       | stat_count             | bar chart, after aggregating counts of specified x var (can override by setting `stat = "identity"` if the x values are already aggregated and counts given in y)                              |
-        | geom_col                                       | NA                     | bar chart, using values specified in y for heights                                                                                                                                             |
-        | geom_bin_2d                                    | stat_bin_2d            | heatmap of 2D bin counts                                                                                                                                                                       |
-        | geom_blank                                     | NA                     | do nothing                                                                                                                                                                                     |
-        | geom_boxplot                                   | stat_boxplot           | box and whisker plots (Tukey style)                                                                                                                                                            |
-        | geom_contour                                   | stat_contour           | visualize 3D surface in 2D                                                                                                                                                                     |
-        | geom_contour_filled                            | stat_contour_filled    | visualize 3D surface in 2D                                                                                                                                                                     |
-        | geom_count                                     | stat_sum               | variant of geom_point to count overlapping points for discrete data (size of point will correspond to \# of points with same exact x,y val)                                                    |
-        | geom_density                                   | stat_density           | smoothed density estimates                                                                                                                                                                     |
-        | geom_density_2d                                | stat_density_2d        | contours of 2D density estimate, just contour lines                                                                                                                                            |
-        | geom_density_2d_filled                         | stat_density_2d_filled | contours of 2D density estimate, filled contour bands                                                                                                                                          |
-        | geom_dotplot                                   | NA                     | dot plot                                                                                                                                                                                       |
-        | geom_function                                  | stat_function          | draw a function as continous curve                                                                                                                                                             |
-        | geom_hex                                       | stat_bin_hex           | hexagonal heatmap of 2d bin counts. hexagon bins help avoid "visual artifacts sometimes generated by the very regular alignment of geom_bin_2d"                                                |
-        | geom_freqpoly                                  | stat_bin               | ditto geom_histogram description. frequency polygons more suitable when comparing the distribution of a single continuous variable across levels of a categorical variable                     |
-        | geom_histogram                                 | stat_bin               | visualize distribution of single continuous variable by dividing x axis into bins and counting number of observations in each bin                                                              |
-        | geom_jitter                                    | NA                     | shortcut for `geom_point(position = "jitter")`, adds a small amount of random variation to location of each point. especially useful when overplotting due to discreteness in smaller datesets |
-        | geom_crossbar                                  | NA                     | represent vertical interval defined by `x`, `ymin`, and `ymax`, drawing a single graphical object .                                                                                            |
-        | geom_errorbar                                  | NA                     | represent vertical interval defined by `x`, `ymin`, and `ymax`, drawing a single graphical object. error bars (typically for replicates or confidence intervals)                               |
-        | ~~geom_errorbarh~~                             | NA                     | ~~represent vertical interval defined by `x`, `ymin`, and `ymax`, drawing a single graphical object~~. function is deprecated, use `geom_errorbar(orientation = "y")`                          |
-        | geom_linerange                                 | NA                     | represent vertical interval defined by `x`, `ymin`, and `ymax`, drawing a single graphical object. just a line                                                                                 |
-        | geom_pointrange                                | NA                     | represent vertical interval defined by `x`, `ymin`, and `ymax`, drawing a single graphical object. linerange but with a point on line defined by `y`                                           |
-        | geom_map                                       | NA                     | polygons from a reference map                                                                                                                                                                  |
-        | geom_path                                      | NA                     | connect observations. connect following order in the data                                                                                                                                      |
-        | geom_line                                      | NA                     | connect observations. connect in order of the x axis                                                                                                                                           |
-        | geom_step                                      | NA                     | connect observations. connect in order of x axis but in a step-wise fashion to highlight y axis changes                                                                                        |
-        | geom_point                                     | NA                     | scatter plot                                                                                                                                                                                   |
-        | geom_polygon                                   | NA                     | polygons                                                                                                                                                                                       |
-        | geom_qq_line                                   | stat_qq_line           | slope and intercept connecting points at specified quartiles of theoretical and sample distributions                                                                                           |
-        | geom_qq                                        | stat_qq                | quantile-quantile plots (see if data from column in df follows a theoretical distribution, typically normal. if follows the theoretical dist then will fall along line from stat_qq_line)      |
-        | geom_quantile                                  | stat_quantile          | quantile regression                                                                                                                                                                            |
-        | geom_ribbon                                    | stat_align             | ribbon and area plots                                                                                                                                                                          |
-        | geom_area                                      | stat_align             | ribbon and area plots                                                                                                                                                                          |
-        | geom_rug                                       | NA                     | rug plots in the margins (rug plot = compact visual to supplement a 2d display with the two 1d marginal distributions)                                                                         |
-        | geom_segment                                   | NA                     | line segments                                                                                                                                                                                  |
-        | geom_curve                                     | NA                     | line curves                                                                                                                                                                                    |
-        | geom_smooth                                    | stat_smooth            | smoothed conditional means                                                                                                                                                                     |
-        | geom_spoke                                     | NA                     | line segments parameterised by location, direction and distance (useful for vector fields?)                                                                                                    |
-        | geom_label                                     | NA                     | add text to geom                                                                                                                                                                               |
-        | geom_text                                      | NA                     | add text to geom                                                                                                                                                                               |
-        | geom_raster                                    | NA                     | rectangles                                                                                                                                                                                     |
-        | geom_rect                                      | NA                     | rectangles                                                                                                                                                                                     |
-        | geom_tile                                      | NA                     | rectangles (sometimes used for heatmaps?)                                                                                                                                                      |
-        | geom_violin                                    | stat_ydensity          | violin plot                                                                                                                                                                                    |
-        | geom_sf, coord_sf, geom_sf_label, geom_sf_text | stat_sf                | visualize sf (simple feature) objects                                                                                                                                                          |
+        | geom | stat | description |
+        |------------------|------------------|------------------------------------|
+        | geom_abline | NA | add reference line for annotating plots |
+        | geom_hline | NA | add reference line for annotating plots |
+        | geom_vline | NA | add reference line for annotating plots |
+        | geom_bar | stat_count | bar chart, after aggregating counts of specified x var (can override by setting `stat = "identity"` if the x values are already aggregated and counts given in y) |
+        | geom_col | NA | bar chart, using values specified in y for heights |
+        | geom_bin_2d | stat_bin_2d | heatmap of 2D bin counts |
+        | geom_blank | NA | do nothing |
+        | geom_boxplot | stat_boxplot | box and whisker plots (Tukey style) |
+        | geom_contour | stat_contour | visualize 3D surface in 2D |
+        | geom_contour_filled | stat_contour_filled | visualize 3D surface in 2D |
+        | geom_count | stat_sum | variant of geom_point to count overlapping points for discrete data (size of point will correspond to \# of points with same exact x,y val) |
+        | geom_density | stat_density | smoothed density estimates |
+        | geom_density_2d | stat_density_2d | contours of 2D density estimate, just contour lines |
+        | geom_density_2d_filled | stat_density_2d_filled | contours of 2D density estimate, filled contour bands |
+        | geom_dotplot | NA | dot plot |
+        | geom_function | stat_function | draw a function as continous curve |
+        | geom_hex | stat_bin_hex | hexagonal heatmap of 2d bin counts. hexagon bins help avoid "visual artifacts sometimes generated by the very regular alignment of geom_bin_2d" |
+        | geom_freqpoly | stat_bin | ditto geom_histogram description. frequency polygons more suitable when comparing the distribution of a single continuous variable across levels of a categorical variable |
+        | geom_histogram | stat_bin | visualize distribution of single continuous variable by dividing x axis into bins and counting number of observations in each bin |
+        | geom_jitter | NA | shortcut for `geom_point(position = "jitter")`, adds a small amount of random variation to location of each point. especially useful when overplotting due to discreteness in smaller datesets |
+        | geom_crossbar | NA | represent vertical interval defined by `x`, `ymin`, and `ymax`, drawing a single graphical object . |
+        | geom_errorbar | NA | represent vertical interval defined by `x`, `ymin`, and `ymax`, drawing a single graphical object. error bars (typically for replicates or confidence intervals) |
+        | ~~geom_errorbarh~~ | NA | ~~represent vertical interval defined by `x`, `ymin`, and `ymax`, drawing a single graphical object~~. function is deprecated, use `geom_errorbar(orientation = "y")` |
+        | geom_linerange | NA | represent vertical interval defined by `x`, `ymin`, and `ymax`, drawing a single graphical object. just a line |
+        | geom_pointrange | NA | represent vertical interval defined by `x`, `ymin`, and `ymax`, drawing a single graphical object. linerange but with a point on line defined by `y` |
+        | geom_map | NA | polygons from a reference map |
+        | geom_path | NA | connect observations. connect following order in the data |
+        | geom_line | NA | connect observations. connect in order of the x axis |
+        | geom_step | NA | connect observations. connect in order of x axis but in a step-wise fashion to highlight y axis changes |
+        | geom_point | NA | scatter plot |
+        | geom_polygon | NA | polygons |
+        | geom_qq_line | stat_qq_line | slope and intercept connecting points at specified quartiles of theoretical and sample distributions |
+        | geom_qq | stat_qq | quantile-quantile plots (see if data from column in df follows a theoretical distribution, typically normal. if follows the theoretical dist then will fall along line from stat_qq_line) |
+        | geom_quantile | stat_quantile | quantile regression |
+        | geom_ribbon | stat_align | ribbon and area plots |
+        | geom_area | stat_align | ribbon and area plots |
+        | geom_rug | NA | rug plots in the margins (rug plot = compact visual to supplement a 2d display with the two 1d marginal distributions) |
+        | geom_segment | NA | line segments |
+        | geom_curve | NA | line curves |
+        | geom_smooth | stat_smooth | smoothed conditional means |
+        | geom_spoke | NA | line segments parameterised by location, direction and distance (useful for vector fields?) |
+        | geom_label | NA | add text to geom |
+        | geom_text | NA | add text to geom |
+        | geom_raster | NA | rectangles |
+        | geom_rect | NA | rectangles |
+        | geom_tile | NA | rectangles (sometimes used for heatmaps?) |
+        | geom_violin | stat_ydensity | violin plot |
+        | geom_sf, coord_sf, geom_sf_label, geom_sf_text | stat_sf | visualize sf (simple feature) objects |
 
         ```{r}
         offset = 10
@@ -1074,9 +1074,9 @@ geom_point
       geom_jitter() + # patchwork
     ggplot(mpg, aes(x = displ, y = hwy)) +
       geom_count()
-    
+
     plot.9.6.1.4
-    
+
     ggsave(
       "./plots/9.6.1.4.plot.png",
       plot.9.6.1.4,
@@ -1085,9 +1085,9 @@ geom_point
     )
     ```
 
-5. What’s the default position adjustment for `geom_boxplot()`? Create a visualization of the mpg dataset that demonstrates it.
+5.  What’s the default position adjustment for `geom_boxplot()`? Create a visualization of the mpg dataset that demonstrates it.
 
-- answer: `position_dodge2()` which preserves vertical posiiton of a geom while adjusting the horizontal position. 
+-   answer: `position_dodge2()` which preserves vertical posiiton of a geom while adjusting the horizontal position.
 
 ```{r}
 ?geom_boxplot
@@ -1097,11 +1097,101 @@ ggplot(mpg, aes(x = manufacturer, y = hwy)) +
   theme(axis.text.x = element_text(angle = 90)) +
   ggtitle("hwy mpg by manufacturer")
 
+ggplot(mpg, aes(x = manufacturer, y = hwy)) +
+  geom_boxplot(position = "dodge2") +
+  theme(axis.text.x = element_text(angle = 90)) +
+  ggtitle("hwy mpg by manufacturer")
+
+
+```
+
+## 9.7 Coordinate systems
+- coordinate systems change what `x` (horizontal axis) and `y` (vertical axis) mean
+
+-   3 most useful coordinate systems in ggplot:
+    -   `coord_cartesian()`: classic 2d plot. for `aes()`: x axis and y axis (default)
+    -   `coord_sf()`: for making geographic map projections. for `aes()`: x=longitude, y=latitude (this func replaces `coord_map()`/`coord_quickmap()`)
+    -   `coord_polar()`: for making polar coordinate maps. for `aes()`: x=angle, y=radius
+-   fun fact: Coxcomb chart is essentially a bar chart in polar coordinates
+
+```{r}
+bar <- ggplot(data = diamonds) +
+  geom_bar(
+    mapping = aes(x = clarity, fill = clarity),
+    show.legend = FALSE,
+    width = 1
+  ) +
+  theme(aspect.ratio = 1)
+
+bar
+bar + coord_flip()
+bar + coord_polar()
+```
+
+### 9.7.1 Exercises
+
+1.  Turn a stacked bar chart into a pie chart using `coord_polar.`
+
+- answer:
+```{r}
+# create a single bar sacked bar, so when it's converted there is only 1 color per each slice of the pie chart
+ggplot(diamonds, aes(x = "", fill = cut)) +
+  geom_bar() +
+
+ggplot(diamonds, aes(x = "", fill = cut)) +
+  geom_bar() + 
+  coord_polar(theta = "y")
 ```
 
 
-## 9.7 Coordinate systems
-- 3 most useful coordinate systems in ggplot:
-  - `coord_cartesian()`: classic 2d plot. for `aes()`: x axis and y axis (default)
-  - `coord_sf()`: for making geographic map projections. for `aes()`: x=longitude, y=latitude (this func replaces `coord_map()`/`coord_quickmap()`)
-  - `coord_polar()`: for making polar coordinate maps. for `aes()`: x=angle, y=radius
+-   wrong answer:
+
+```{r}
+bar <- ggplot(data = diamonds) +
+  geom_bar(
+    mapping = aes(x = clarity, fill = cut),
+    show.legend = FALSE,
+    width = 1,
+    position = "fill" # creates a proportion bar chart
+  ) +
+  theme(aspect.ratio = 1)
+
+bar +
+bar + coord_polar()
+```
+
+2.  What’s the difference between [`coord_quickmap()`](https://ggplot2.tidyverse.org/reference/coord_map.html) and [`coord_map()`](https://ggplot2.tidyverse.org/reference/coord_map.html)?
+
+-   answer: **note** `coord_sf()` supersedes both `coord_map()` and `coord_quickmap()`, the latter two should NOT be used in new code. `coord_map()` projects a portion of the earth onto a flat 2D plane using any projection defined by the package `mapproj`. Map projections generally do not preserve straight lines so this process takes a lot of computation. `coord_quickmap()` is a quick approximation that does preserve straight lines. `coord_quickmap()` is more accurate for smaller areas and closer to the equator.
+
+3.  What does the following plot tell you about the relationship between city and highway mpg? Why is [`coord_fixed()`](https://ggplot2.tidyverse.org/reference/coord_fixed.html) important? What does [`geom_abline()`](https://ggplot2.tidyverse.org/reference/geom_abline.html) do?
+
+-   answer: city and highway mpg are positively and approximately linearly correlated. `geom_abline` adds a reference line (aka rule) to a plot for annotation and comparison. `coord_fixed` forces a specified ratio between the physical representation of data units on the axes. For example, 1 cm represents the same units on each. I'm not sure why `coord_fixed()` is important, as the result is the same even if I remove it. Since the coordinate system is fixed with a ratio of 1, we know the line represents y = x. As for `geom_abline`, since the points are above the line we know that `hwy` is always higher than `cty` for a given observation `(x, y) = (cty, hwy)`. In other words, for any car in our dataset, the highway mileage is always higher than the city mileage.
+
+    ```{r}
+    ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+      geom_point() + 
+      geom_abline() +
+      coord_fixed() +
+    ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+      geom_point() + 
+      geom_abline()
+    ```
+
+## 9.8 The layered grammar of graphics
+
+given the seven parameters for the ggplot grammatical structure below, we can create *any* plot imaginable. add `theme()` and some form of `scale_*` and we can further customize plots a great deal.
+
+```         
+ggplot(data = <DATA>) + 
+  <GEOM_FUNCTION>(
+     mapping = aes(<MAPPINGS>),
+     stat = <STAT>, 
+     position = <POSITION>
+  ) +
+  <COORDINATE_FUNCTION> +
+  <FACET_FUNCTION>
+```
+
+## 9.9 Summary
+Two very useful resources for getting an overview of the complete ggplot2 functionality are the ggplot2 cheatsheet (which you can find at https://posit.co/resources/cheatsheets) and the ggplot2 package website (https://ggplot2.tidyverse.org).

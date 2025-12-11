@@ -1,0 +1,15 @@
+---
+title: "10-exploratory-data-analysis-EDA"
+format: html
+---
+
+```{r}
+library(tidyverse)
+library(patchwork)
+sessionInfo()
+
+# https://stackoverflow.com/questions/21967254/how-to-write-a-reader-friendly-sessioninfo-to-text-file
+if (!file.exists("./session_info.txt")) {
+  writeLines(capture.output(sessionInfo()), "sessionInfo.txt")
+}
+```
