@@ -1,7 +1,27 @@
 ---
 title: "10-exploratory-data-analysis-EDA"
 format: html
+editor: 
+  markdown: 
+    wrap: 72
 ---
+
+## 10.1 Introduction
+
+-   exploratory data analysis (EDA) is an iterative process of
+    visualizing, transforming, and modeling data to discover and
+    understand the elements relevant for your goals (often modeling for
+    prediction/forecasting or simulation). EDA process:
+
+1.  generate questions about data
+2.  search for answers by visualizing, transforming, and modelling data
+3.  use what was learned to refine questions and/or generate new
+    questions (start back at step 1)
+
+-   data cleaning is one application of EDA: goal is to answer whether
+    data quality meets expectations or not
+
+### 10.1.1 Prerequisites
 
 ```{r}
 library(tidyverse)
@@ -13,3 +33,376 @@ if (!file.exists("./session_info.txt")) {
   writeLines(capture.output(sessionInfo()), "sessionInfo.txt")
 }
 ```
+
+## 10.2 Questions
+
+EDA is creative process, not exact science. Be sure to ask thoughtful
+questions and learn as you go - can't be perfect from onset but can
+quickly learn by following up each quality question with new quality
+question(s) based on findings
+
+Again, each dataset generally requires its own set of questions needed
+to gain useful insights based on your goal, but here are two questions
+that are always useful starting points.
+
+1.  What type of variation occurs within my variables?
+2.  What type of covariation occurs between my variables?
+
+## 10.3 Variation
+
+**Variation**: tendency of values of a variable to change from
+measurement to measurement. measuring a continuous variable twice will
+always yield different values given enough precision (decimal places).
+two sources of variation:
+
+1.  when observing some instance of a variable: measurement errors
+    across replicates of the same observation subject.
+
+-   variation due to instrument limitation: no instrument is infinitely
+    precise
+-   variation by time: replicating exact same conditions for some
+    instance is nearly impossible
+-   e.g. weight of a single person measured multiple times. we can't get
+    infinite decimal places on their mass and, for any specific decimal,
+    there's infinitely low probability that their mass is defined
+    uniquely to any given decimal place e.g. given person A \[1\] does
+    person A weigh 150.5 kg, 50.49 kg, 150.499 kg, etc. \[2\] what if
+    they changed their diet between days or just ate before being
+    weighed?
+
+2.  when observing different instances of a variable: different
+    observations/subjects of a variable, not replicates (e.g. weight of
+    different people being measured)
+
+-   *QUESTION FOR LATER* how hard is it to distinguish these two
+    variation causes?
+
+### case study begin
+
+let's explore the diamond dataset, starting with the carat variable
+
+-   best way to understand pattern of variation is to visualize it.
+    histograms are great for continuous variables
+-   twofold key to good questions, ask variations of:
+    -   what do i want to know (curiosity)
+    -   how can what i see be misleading (skepticism)
+
+```{r}
+ggplot(diamonds, aes(x = carat)) +
+  geom_histogram(binwidth = 0.5)
+```
+
+### 10.3.1 Typical values
+
+in bar charts and histograms,
+
+-   tall bars mean common values
+-   no bars means values not in dataset
+
+questions to ask:
+
+-   Which values are the most common? Why?
+-   Which values are rare? Why? Does that match your expectations?
+-   Can you see any unusual patterns? What might explain them?
+
+```{r}
+# let's look at carat for smaller diamonds
+smaller <- diamonds |> 
+  filter(carat < 3)
+
+ggplot(smaller, aes(x = carat)) +
+  geom_histogram(binwidth = 0.01)
+```
+
+this plot begets these questions:
+
+-   Why are there more diamonds at whole carats and common fractions of
+    carats?
+-   Why are there more diamonds slightly to the right of each peak than
+    there are slightly to the left of each peak?
+
+visualization can also reveal "clustering" (aka "sub grouping") of data.
+
+-   How are the observations within each subgroup similar to each other?
+-   How are the observations in separate clusters different from each
+    other?
+-   How can you explain or describe the clusters?
+-   Why might the appearance of clusters be misleading?
+
+### 10.3.2 Unusual values
+
+outliers = data that doesn't follow rest of dataset's pattern
+
+causes of outliers?
+
+1.  data entry errors
+2.  extreme values that are rare but possible
+3.  rare but important discoveries
+
+with lots of data, outliers can be hard to see
+
+```{r}
+# primary evidence of outliers in plot below is the strangely wide x axis, as 
+# most of data falls in the 0 to 10 range
+ggplot(diamonds, aes(x = y)) + 
+  geom_histogram(binwidth = 0.5)
+```
+
+let's zoom in on the y axis using `coord_cartesian()`. note:
+`coord_cartesian()` zooms while `xlim()` and `ylim()` which throw out
+values outside the limits
+
+```{r}
+ggplot(diamonds, aes(x = y)) + 
+  geom_histogram(binwidth = 0.5) +
+  coord_cartesian(ylim = c(0, 50))
+```
+
+we see 3 unusual bins at 0, \~30, and \~60. let's extract them
+
+```{r}
+unusual <- diamonds |> 
+  filter(y < 3 | y > 20) |> 
+  select(price, x, y, z) |>
+  arrange(y)
+unusual
+```
+
+`x`, `y`, `z` are measure each of the 3 dimensions of the diamonds. 0 is
+impossible, so we know these aren't real measurements! these values must
+have been incorrectly recorded, and should be `NA`. EDA has revealed
+missing values that searching for `NA` wouldn't have found
+
+**what to do when you find outliers?** repeat analysis with and without
+outliers. if they have minimal effect and can't figure out why they're
+there, then simply omit them. if they have large effect, then must
+have a valid justification for removing them.
+
+### 10.3.3 Exercises
+1. Explore the distribution of each of the x, y, and z variables in diamonds. What do you learn? Think about a diamond and how you might decide which dimension is the length, width, and depth.
+
+- answer: x, y, and z are explored below. according to `?diamonds` x is the length, y is width, z is "depth" (different from the var `depth`). when looking at the distribution and limits on the histograms/description page, x appears to be smaller than y. then z must be that third dimension orthogonal to both. there appears to be 20 rows in diamonds that have zero values for x, y, and/or z (which is invalid). i suggest either correcting them by back calculating from `depth`, or omitting these values.
+
+```{r}
+diamonds |>
+  ggplot(aes(x = x)) +
+  geom_histogram(binwidth = 0.5) + 
+  ggtitle("Distribution of x")
+
+# are there extreme values of x? not really.
+diamonds |>
+  ggplot(aes(x = x)) +
+  geom_histogram(binwidth = 0.5) + 
+  coord_cartesian(ylim = c(0, 7500)) +
+  ggtitle("Distribution of x")
+
+# what do the "extreme" values of x look like in terms of their whole observation set?
+diamonds |>
+  filter(
+    x >= 9 | x < 3.75
+  )
+
+# strange, there are some 0 measurements in x, y, and/or z above. this isnt
+# possible, otherwise the diamonds would be 2D instead of 3D. they couldn't have
+# a "depth" measurement that is nonzero or non-infinity.
+# what do the observations with zero values look like?
+diamonds |>
+  filter(
+    x == 0 | y == 0 | z == 0
+  ) |>
+  arrange(x, y, z)
+```
+```{r}
+diamonds |>
+  ggplot(aes(x = y)) +
+  geom_histogram(binwidth = 0.05) + 
+  ggtitle("Distribution of y")
+
+diamonds |>
+  ggplot(aes(x = y)) +
+  geom_histogram(binwidth = 0.5) + 
+  ggtitle("Distribution of y")
+
+diamonds |>
+  ggplot(aes(x = y)) +
+  geom_histogram(binwidth = 5) + 
+  ggtitle("Distribution of y")
+```
+
+```{r}
+diamonds |>
+  ggplot(aes(x = z)) +
+  geom_histogram(binwidth = 0.05) + 
+  ggtitle("Distribution of z")
+
+diamonds |>
+  ggplot(aes(x = z)) +
+  geom_histogram(binwidth = 0.5) + 
+  ggtitle("Distribution of z")
+
+diamonds |>
+  ggplot(aes(x = z)) +
+  geom_histogram(binwidth = 5) + 
+  ggtitle("Distribution of z")
+```
+
+
+2. Explore the distribution of price. Do you discover anything unusual or surprising? (Hint: Carefully think about the binwidth and make sure you try a wide range of values.)
+
+- answer: For a binwidth of $1000, the second smallest bin contains a large proportion of the data, 18261 diamonds. There are 53940 diamonds in the dataset, so 18621/53940 = 34.5% of the data. This bin includes diamonds in the price range [500, 1500). This is unique, but I don't think it's surprising. Most jewelers probably want to keep most cuts of diamonds in the 1k price range to incentive people to buy them, as I think people will be less willing to buy more expensive diamonds (or perhaps unable to buy more expensive). 
+
+```{r}
+for (cur_binwidth in 10^seq(0,4)) {
+  print(cur_binwidth)
+  tmp <- diamonds |>
+    ggplot(mapping = aes(price)) +
+    geom_histogram(binwidth = cur_binwidth) +
+    ggtitle(paste0("Distribution of price"), subtitle = paste0("binwidth = ", cur_binwidth)) + 
+    stat_bin(binwidth = cur_binwidth, 
+             geom = 'text', 
+             color = 'red', 
+             aes(label = after_stat(count)),
+             angle = 90,
+           position = position_stack(vjust = 0.5))
+  print(tmp)
+}
+```
+```{r}
+diamonds |>
+  filter(price < 2000) |>
+  arrange(price)
+```
+
+```{r}
+p <- ggplot(diamonds, aes(price)) +
+  geom_histogram(binwidth = 1000)
+
+bins <- ggplot_build(p)$data[[1]]
+
+bins
+```
+
+
+3. How many diamonds are 0.99 carat? How many are 1 carat? What do you think is the cause of the difference?
+
+- answer: There are 23 diamonds that are 0.99 carat and 1558 diamonds that are 1.00 carat. I originally suspect that the difference is due to some diamonds being rounded but not others (due to convenience and/or instrument precision for people contributing to the dataset), but I think that would meant that certain multiples of a number should have big spikes in the histogram at regular intervals and low values everywhere else. Instead of that we get this weird pattern where a certain value has a large bar then the bars gradually decrease in size until a large spike. The peaks form a repeating "exponential decay" pattern. This could be a rounding pattern, perhaps it's rare to measure certain values of carat so precisely.
+
+```{r}
+diamonds |>
+  count(carat) |>
+  filter(carat >= 0.95 & carat <= 1.05)
+```
+
+```{r}
+set_binwidths = c(0.01, 0.05, 0.10, 0.25, 0.5, 1)
+for (cur_binwidth in set_binwidths) {
+  print(cur_binwidth)
+  tmp <- diamonds |>
+    ggplot(mapping = aes(carat)) +
+    geom_histogram(binwidth = cur_binwidth) +
+    ggtitle(paste0("Distribution of carat"), subtitle = paste0("binwidth = ", cur_binwidth)) 
+    
+    
+  if (cur_binwidth > 0.05)
+    tmp = tmp + 
+      stat_bin(binwidth = cur_binwidth, 
+             geom = 'text', 
+             color = 'red', 
+             aes(label = after_stat(count)),
+             angle = 90,
+           position = position_stack(vjust = 0.5))
+  else
+      tmp = tmp +
+        scale_x_continuous(breaks = scales::breaks_extended(n = 50)) +
+        theme(
+          axis.text.x = element_text(color="black", angle=90)
+        ) +
+      stat_bin(binwidth = cur_binwidth, 
+       geom = 'text', 
+       color = 'red', 
+       aes(label = after_stat(count)),
+       angle = 90,
+       size = 1.5,
+       position = position_stack(vjust = 1)
+      )
+    
+  print(tmp)
+}
+```
+```{r}
+test_carat_multiples <- seq(0.01,0.5,0.01)
+
+for (cur_carat_multiple in test_carat_multiples) {
+  tmp <- diamonds |>
+    filter(
+      ((carat*100) %% (cur_carat_multiple*100)) == 0
+    )
+  
+  # print(tmp)
+  print(paste0("cur_carat_multiple = ", cur_carat_multiple))
+  print(paste0("num diamonds at this carat multiple = ", nrow(tmp)))
+  print("---")
+}
+```
+
+4. Compare and contrast coord_cartesian() vs. xlim() or ylim() when zooming in on a histogram. What happens if you leave binwidth unset? What happens if you try and zoom so only half a bar shows?
+
+- answer: see comments and plots below. when setting binwidth, coord_cartesian behaves as generally desired (a zooming function) rather than removing out of bounds bars like xlim/ylim. when the binwidth is not set, it seems the default value for bins (30) forces both to appear to work. as explained in the text though, xlim/ylim will silently remove values from the dataset when doing the counting statistic, whereas coord_cartesian will count all values but may not display some depending on the bounds
+
+setting binwidth
+```{r}
+tmp <- ggplot(diamonds, aes(x = carat)) +
+  geom_histogram(binwidth = 1) + 
+      stat_bin(binwidth = 1, 
+             geom = 'text', 
+             color = 'red', 
+             aes(label = after_stat(count)),
+             angle = 90,
+           position = position_stack(vjust = 0.5))
+
+# try to cut out some bars by focusing on smaller x axis? works with coord_cartesian!
+tmp +
+  coord_cartesian(xlim = c(0,2))
+
+# try to cut bar in half by focusing on smaller y axis? works with coord_cartesian!
+tmp +
+  coord_cartesian(ylim = c(0,25000))
+
+# try to cut out some bars by focusing on smaller x axis? DOESNT work with xlim! removes the bars containing out of limit bounds
+tmp +
+  xlim(c(0,2))
+
+# try to cut bar in half by focusing on smaller y axis? DOESNT workswith ylim! bars that would be presented outside the y axis range are simply removed
+tmp +
+  ylim(c(0,25000))
+```
+
+not setting binwidth (letting default `bins = 30` determine binwidth)
+```{r}
+tmp <- ggplot(diamonds, aes(x = carat)) +
+  geom_histogram() + 
+      stat_bin( 
+             geom = 'text', 
+             color = 'red', 
+             aes(label = after_stat(count)),
+             angle = 90,
+           position = position_stack(vjust = 0.5))
+
+# try to cut out some bars by focusing on smaller x axis? works with coord_cartesian!
+tmp +
+  coord_cartesian(xlim = c(0,2))
+
+# try to cut bar in half by focusing on smaller y axis? works with coord_cartesian!
+tmp +
+  coord_cartesian(ylim = c(0,25000))
+
+# try to cut out some bars by focusing on smaller x axis? DOESNT work with xlim! removes the bars containing out of limit bounds
+tmp +
+  xlim(c(0,2))
+
+# try to cut bar in half by focusing on smaller y axis? DOESNT workswith ylim! bars that would be presented outside the y axis range are simply removed
+tmp +
+  ylim(c(0,25000))
+```
+
+## 10.4
