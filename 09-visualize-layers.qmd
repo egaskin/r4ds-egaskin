@@ -1,6 +1,7 @@
 ---
 title: "09-visualize-layers"
-format: html
+format:
+  pdf: default
 editor: visual
 ---
 
