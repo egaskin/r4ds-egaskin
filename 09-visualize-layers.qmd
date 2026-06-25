@@ -27,8 +27,11 @@ library(patchwork)
 sessionInfo()
 
 # https://stackoverflow.com/questions/21967254/how-to-write-a-reader-friendly-sessioninfo-to-text-file
-if (!file.exists("./session_info.txt")) {
+if (!file.exists("./sessionInfo.txt")) {
   writeLines(capture.output(sessionInfo()), "sessionInfo.txt")
+  print("Made new sessionInfo.txt")
+} else{
+  print("Kept existing sessionInfo.txt")
 }
 ```
 
