@@ -22,3 +22,6 @@ archive/
 
 # ignore data folder
 data/
+
+# ignore all .DS_Store
+.DS_Store
